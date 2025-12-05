@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carte du voyage - undefined</title>
+  <style>
+    body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    #map { height: 100vh; width: 100%; }
+    .info-window { max-width: 250px; font-family: Arial, sans-serif; }
+    .info-window img { width: 100%; height: auto; border-radius: 8px; margin-bottom: 10px; }
+    .info-window h3 { margin: 0 0 5px 0; font-size: 16px; color: #333; }
+    .info-window p { margin: 5px 0; font-size: 14px; color: #666; }
+    .info-window a { color: #1a73e8; text-decoration: none; }
+    .info-window a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  
+  <script>
+    function initMap() {
+      const center = { lat: 78.2253231, lng: 15.6256365 };
+      const map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: center
+      });
+      
+      const markers = [{"lat":78.2253231,"lng":15.6256365,"name":"Longyearbyen","jour":1,"titre":"Arrivée à Longyearbyen, porte de l'Arctique","streetViewUrl":"https://maps.googleapis.com/maps/api/streetview?size=600x400&location=78.2253231,15.6256365&key=AIzaSyBXsVY9wZUc8Q9VnK5oYDc8bBNvzvfDH4Q","streetViewLinkUrl":"https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=78.2253231,15.6256365","aiImageUrl":"jour1.jpg"}];
+      
+      markers.forEach((markerData) => {
+        const marker = new google.maps.Marker({
+          position: { lat: markerData.lat, lng: markerData.lng },
+          map: map,
+          title: markerData.name,
+          label: String(markerData.jour)
+        });
+        
+        const contentString = `
+          <div class="info-window">
+            <img src="${markerData.streetViewUrl}" alt="Street View de ${markerData.name}" />
+            <h3>Jour ${markerData.jour}</h3>
+            <p><strong>${markerData.name}</strong></p>
+            <p><a href="${markerData.streetViewLinkUrl}" target="_blank" rel="noopener noreferrer"><strong>${markerData.titre}</strong></a></p>
+          </div>
+        `;
+        
+        const infoWindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+        
+        marker.addListener('click', () => {
+          infoWindow.open(map, marker);
+        });
+      });
+    }
+  </script>
+  
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBXsVY9wZUc8Q9VnK5oYDc8bBNvzvfDH4Q&callback=initMap">
+  </script>
+</body>
+</html>
